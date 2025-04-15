@@ -15,6 +15,7 @@ USE CH05_ICQ;
 CREATE TABLE D_T (
    D_ID INTEGER NOT NULL,
    D_NAME VARCHAR(5),
+   MANAGER_ID INTEGER,
    CONSTRAINT D_T_PK PRIMARY KEY (D_ID) -- Defines D_ID as the primary key; D_T_PK is the constraint's name.
 );
 
@@ -47,3 +48,5 @@ SELECT * FROM D_T; -- Select all records from D_T table
 SELECT * FROM E_T; -- Select all records from E_T table
 
 --
+
+DROP TABLE D_T;
