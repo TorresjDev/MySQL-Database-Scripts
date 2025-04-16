@@ -6,12 +6,11 @@ CREATE DATABASE CH05_ICQ;
 -- Use the database for the exercise
 USE CH05_ICQ;
 
-
 -- Create the tables D_T && E_T
 -- ! QUESTION:
 -- WHY USE CONSTRAINT METHOD FOR PRIMARY KEY AND NOT DIRECTLY ASSIGNING PRIMARY KEY VIA: D_ID INTEGER NOT NULL PRIMARY KEY?
 
--- D_T table 
+-- * D_T table 
 CREATE TABLE D_T (
    D_ID INTEGER NOT NULL,
    D_NAME VARCHAR(5),
@@ -19,7 +18,7 @@ CREATE TABLE D_T (
    CONSTRAINT D_T_PK PRIMARY KEY (D_ID) -- Defines D_ID as the primary key; D_T_PK is the constraint's name.
 );
 
--- E_T table
+-- * E_T table
 CREATE TABLE E_T (
    E_ID INTEGER NOT NULL,
    E_NAME VARCHAR(25),
@@ -31,7 +30,7 @@ CREATE TABLE E_T (
    CONSTRAINT E_T_FK2 FOREIGN KEY (SP_ID) REFERENCES E_T(E_ID) -- E_T_FK2 is a self-referencing foreign key constraint for SP_ID in E_T table.
 );
 
--- Insert data into the tables
+-- * Insert data into the tables
 INSERT INTO D_T (D_ID, D_NAME, MANAGER_ID) VALUES (1, 'IT', 5);
 INSERT INTO D_T (D_ID, D_NAME, MANAGER_ID) VALUES (2, 'HR', 3);
 INSERT INTO D_T (D_ID, D_NAME, MANAGER_ID) VALUES (3, "HQ", 2);
@@ -47,6 +46,5 @@ SELECT * FROM D_T; -- Select all records from D_T table
 
 SELECT * FROM E_T; -- Select all records from E_T table
 
---
+DROP TABLE D_T; -- Drop D_T table
 
-DROP TABLE D_T;
