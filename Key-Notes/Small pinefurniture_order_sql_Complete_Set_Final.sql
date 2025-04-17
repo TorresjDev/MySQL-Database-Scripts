@@ -723,12 +723,83 @@ SELECT * FROM S_CUSTOMER_t;
 
 --#endregion
 -- #region HW 5
+--? SQL NOTES
+-- DISTINCT is used to prevent duplicate values
+-- CONCAT() combine attributes into one string value
+-- AS is used to rename a column or table with an alias
+--? SQL STATEMENTS
+SELECT * FROM S_CUSTOMER_t WHERE Customer_Id = 1;
+
+--USE TO FIND CUSTOMER BY ID
 -- 1.	What are the names of all customers who have placed orders?
-SELECT SC.Customer_Name FROM S_CUSTOMER_t AS SC
-    JOIN S_ORDER_t AS SO ON SC.Customer_Id = SO.Customer_Id;
+SELECT DISTINCT Customer_Name FROM S_CUSTOMER_t AS SC
+    JOIN S_ORDER_t AS SO ON SC.Customer_Id = SO.Customer_Id
+ORDER BY Customer_Name;
 
 -- 2.	What are the product descriptions ordered by the customer ID, 1?
-SELECT PDT.Product_Description FROM S_PRODUCT_t AS PDT
-    JOIN S_Order_Line_t AS OL ON PDT.Product_Id = OL.Product_Id
-    JOIN S_ORDER_t AS O ON OL.Order_Id = O.Order_Id
-WHERE O.Customer_Id = 1;
+SELECT Customer_Name, SO.Order_Id, Product_Description, Ordered_Quantity FROM S_PRODUCT_t AS SP
+    JOIN S_Order_Line_t AS SOL ON SP.Product_Id = SOL.Product_Id
+    JOIN S_ORDER_t AS SO ON SOL.Order_Id = SO.Order_Id
+    JOIN S_CUSTOMER_t AS SC ON SO.Customer_Id = SC.Customer_ID
+WHERE SO.Customer_Id = 1
+ORDER BY SO.Order_Id, Product_Description;
+
+
+-- 3.	What are the product descriptions ordered by the customer, ‘Impressions’?
+SELECT Customer_Name, Product_Description FROM S_PRODUCT_t AS SP
+    JOIN S_Order_Line_t AS SOL ON SP.Product_Id = SOL.Product_Id
+    JOIN S_ORDER_t AS SO ON SOL.Order_Id = SO.Order_Id
+    JOIN S_CUSTOMER_t AS SC ON SO.Customer_Id = SC.Customer_Id
+WHERE Customer_Name = 'Impressions';
+
+
+-- 4.	List all customers’ names that have placed an order that contains a product whose standard price is over 500.
+SELECT DISTINCT Customer_Name FROM S_CUSTOMER_t AS SC
+    JOIN S_ORDER_t AS SO ON SC.Customer_Id = SO.Customer_Id
+    JOIN S_Order_Line_t AS SOL ON SO.Order_Id = SOL.Order_Id
+    JOIN S_PRODUCT_t AS SP ON SOL.Product_Id = SP.Product_Id
+WHERE Standard_Price > 500;
+
+-- 5.	List all customers. Print the order ID (s) along the customer information IF they have submitted the order(s).
+SELECT
+    SO.Order_ID,
+    SC.Customer_Name,
+    CONCAT(SC.Customer_Address, ', ', SC.Customer_City, ', ', SC.Customer_State, ', ', SC.Postal_Code) AS Customer_Address,
+    SP.Product_Description,
+    SP.Product_Finish,
+    SP.Standard_Price,
+    SOL.Ordered_Quantity
+FROM
+    S_CUSTOMER_t AS SC
+    INNER JOIN S_ORDER_t AS SO ON SC.Customer_Id = SO.Customer_Id
+    INNER JOIN S_Order_Line_t AS SOL ON SO.Order_Id = SOL.Order_Id
+    INNER JOIN S_PRODUCT_t AS SP ON SOL.Product_Id = SP.Product_Id;
+
+-- 6.	Display the subtotal amount of each order line in each order.
+SELECT
+    SO.Order_Id,
+    SP.Product_Description,
+    SOL.Ordered_Quantity,
+    SP.Standard_Price,
+    (
+        SOL.Ordered_Quantity * SP.Standard_Price
+    ) AS Subtotal
+FROM
+    S_ORDER_t AS SO
+INNER JOIN S_Order_Line_t AS SOL ON SO.Order_Id = SOL.Order_Id
+INNER JOIN S_PRODUCT_t AS SP ON SOL.Product_Id = SP.Product_Id;
+
+-- 7.	Display the total amount of each order
+SELECT
+    SO.Order_Id,
+    SUM(
+        SOL.Ordered_Quantity * SP.Standard_Price
+    ) AS Total_Amount
+FROM
+    S_ORDER_t AS SO
+INNER JOIN S_Order_Line_t AS SOL ON SO.Order_Id = SOL.Order_Id
+INNER JOIN S_PRODUCT_t AS SP ON SOL.Product_Id = SP.Product_Id
+GROUP BY
+    SO.Order_Id;
+
+-- #endregion
