@@ -2,8 +2,7 @@ CREATE DATABASE IF NOT EXISTS M05_HW;
 
 USE M05_HW;
 
-SET
-    FOREIGN_KEY_CHECKS = 0;
+SET FOREIGN_KEY_CHECKS = 0;
 
 -- #region Drop tables
 DROP TABLE IF EXISTS S_CUSTOMER_t;
@@ -15,47 +14,42 @@ DROP TABLE IF EXISTS S_PRODUCT_t;
 DROP TABLE IF EXISTS S_Order_line_t;
 
 -- #endregion
-SET
-    FOREIGN_KEY_CHECKS = 1;
+SET FOREIGN_KEY_CHECKS = 1;
 
-CREATE TABLE
-    S_CUSTOMER_t (
-        Customer_Id integer NOT NULL,
-        Customer_Name VARCHAR(25),
-        Customer_Address VARCHAR(30),
-        Customer_City VARCHAR(20),
-        Customer_State VARCHAR(2),
-        Postal_Code VARCHAR(10),
-        CONSTRAINT S_CUSTOMER_PK PRIMARY KEY (Customer_Id)
-    );
+CREATE TABLE S_CUSTOMER_t (
+    Customer_Id integer NOT NULL,
+    Customer_Name VARCHAR(25),
+    Customer_Address VARCHAR(30),
+    Customer_City VARCHAR(20),
+    Customer_State VARCHAR(2),
+    Postal_Code VARCHAR(10),
+    CONSTRAINT S_CUSTOMER_PK PRIMARY KEY (Customer_Id)
+);
 
-CREATE TABLE
-    S_ORDER_t (
-        Order_Id INTEGER NOT NULL,
-        Customer_Id INTEGER,
-        Order_Date DATE,
-        CONSTRAINT S_ORDER_PK PRIMARY KEY (Order_Id),
-        CONSTRAINT S_ORDER_FK1 FOREIGN KEY (Customer_Id) REFERENCES S_CUSTOMER_t (Customer_Id)
-    );
+CREATE TABLE S_ORDER_t (
+    Order_Id INTEGER NOT NULL,
+    Customer_Id INTEGER,
+    Order_Date DATE,
+    CONSTRAINT S_ORDER_PK PRIMARY KEY (Order_Id),
+    CONSTRAINT S_ORDER_FK1 FOREIGN KEY (Customer_Id) REFERENCES S_CUSTOMER_t (Customer_Id)
+);
 
-CREATE TABLE
-    S_PRODUCT_t (
-        Product_Id INTEGER NOT NULL,
-        Product_Description VARCHAR(50),
-        Product_Finish VARCHAR(20),
-        Standard_Price Decimal(6, 2),
-        CONSTRAINT S_PRODUCT_PK PRIMARY KEY (Product_Id)
-    );
+CREATE TABLE S_PRODUCT_t (
+    Product_Id INTEGER NOT NULL,
+    Product_Description VARCHAR(50),
+    Product_Finish VARCHAR(20),
+    Standard_Price Decimal(6, 2),
+    CONSTRAINT S_PRODUCT_PK PRIMARY KEY (Product_Id)
+);
 
-CREATE TABLE
-    S_Order_line_t (
-        Order_Id INTEGER NOT NULL,
-        Product_Id INTEGER NOT NULL,
-        Ordered_Quantity INTEGER,
-        CONSTRAINT S_Order_line_PK PRIMARY KEY (Order_Id, Product_Id),
-        CONSTRAINT S_Order_line_FK1 FOREIGN KEY (Order_Id) REFERENCES S_ORDER_t (Order_Id),
-        CONSTRAINT S_Order_line_FK2 FOREIGN KEY (Product_Id) REFERENCES S_PRODUCT_t (Product_Id)
-    );
+CREATE TABLE S_Order_line_t (
+    Order_Id INTEGER NOT NULL,
+    Product_Id INTEGER NOT NULL,
+    Ordered_Quantity INTEGER,
+    CONSTRAINT S_Order_line_PK PRIMARY KEY (Order_Id, Product_Id),
+    CONSTRAINT S_Order_line_FK1 FOREIGN KEY (Order_Id) REFERENCES S_ORDER_t (Order_Id),
+    CONSTRAINT S_Order_line_FK2 FOREIGN KEY (Product_Id) REFERENCES S_PRODUCT_t (Product_Id)
+);
 
 -- #region Insert data into the TABLE: S_CUSTOMER_t
 INSERT INTO
@@ -67,8 +61,7 @@ INSERT INTO
         Customer_State,
         Postal_Code
     )
-VALUES
-    (
+VALUES (
         1,
         'Contemporary Casuals',
         '1355 S Hines Blvd',
@@ -86,8 +79,7 @@ INSERT INTO
         Customer_State,
         Postal_Code
     )
-VALUES
-    (
+VALUES (
         2,
         'Value Furniture',
         '15145 S.W. 17th St.',
@@ -105,8 +97,7 @@ INSERT INTO
         Customer_State,
         Postal_Code
     )
-VALUES
-    (
+VALUES (
         3,
         'Home Furnishings',
         '1900 Allard Ave.',
@@ -124,8 +115,7 @@ INSERT INTO
         Customer_State,
         Postal_Code
     )
-VALUES
-    (
+VALUES (
         4,
         'Eastern Furniture',
         '1925 Beltline Rd.',
@@ -143,8 +133,7 @@ INSERT INTO
         Customer_State,
         Postal_Code
     )
-VALUES
-    (
+VALUES (
         5,
         'Impressions',
         '5585 Westcott Ct.',
@@ -162,8 +151,7 @@ INSERT INTO
         Customer_State,
         Postal_Code
     )
-VALUES
-    (
+VALUES (
         6,
         'Furniture Gallery',
         '325 Flatiron Dr.',
@@ -181,8 +169,7 @@ INSERT INTO
         Customer_State,
         Postal_Code
     )
-VALUES
-    (
+VALUES (
         7,
         'Period Furniture',
         '394 Rainbow Dr.',
@@ -200,8 +187,7 @@ INSERT INTO
         Customer_State,
         Postal_Code
     )
-VALUES
-    (
+VALUES (
         8,
         'Calfornia Classics',
         '816 Peach Rd.',
@@ -219,8 +205,7 @@ INSERT INTO
         Customer_State,
         Postal_Code
     )
-VALUES
-    (
+VALUES (
         9,
         'M and H Casual Furniture',
         '3709 First Street',
@@ -238,8 +223,7 @@ INSERT INTO
         Customer_State,
         Postal_Code
     )
-VALUES
-    (
+VALUES (
         10,
         'Seminole Interiors',
         '2400 Rocky Point Dr.',
@@ -257,8 +241,7 @@ INSERT INTO
         Customer_State,
         Postal_Code
     )
-VALUES
-    (
+VALUES (
         11,
         'American Euro Lifestyles',
         '2424 Missouri Ave N.',
@@ -276,8 +259,7 @@ INSERT INTO
         Customer_State,
         Postal_Code
     )
-VALUES
-    (
+VALUES (
         12,
         'Battle Creek Furniture',
         '345 Capitol Ave. SW',
@@ -295,8 +277,7 @@ INSERT INTO
         Customer_State,
         Postal_Code
     )
-VALUES
-    (
+VALUES (
         13,
         'Heritage Furnishings',
         '66789 College Ave.',
@@ -314,8 +295,7 @@ INSERT INTO
         Customer_State,
         Postal_Code
     )
-VALUES
-    (
+VALUES (
         14,
         'Kaneohe Homes',
         '112 Kiowai St.',
@@ -333,8 +313,7 @@ INSERT INTO
         Customer_State,
         Postal_Code
     )
-VALUES
-    (
+VALUES (
         15,
         'Mountain Scenes',
         '4132 Main Street',
@@ -346,54 +325,84 @@ VALUES
 -- #endregion
 -- #region Insert data into the TABLE: S_ORDER_t
 INSERT INTO
-    S_Order_T (Order_Id, Order_Date, Customer_Id)
-VALUES
-    (1001, '2020-10-08', 1);
+    S_Order_T (
+        Order_Id,
+        Order_Date,
+        Customer_Id
+    )
+VALUES (1001, '2020-10-08', 1);
 
 INSERT INTO
-    S_Order_T (Order_Id, Order_Date, Customer_Id)
-VALUES
-    (1002, '2020-10-21', 8);
+    S_Order_T (
+        Order_Id,
+        Order_Date,
+        Customer_Id
+    )
+VALUES (1002, '2020-10-21', 8);
 
 INSERT INTO
-    S_Order_T (Order_Id, Order_Date, Customer_Id)
-VALUES
-    (1003, '2020-10-22', 15);
+    S_Order_T (
+        Order_Id,
+        Order_Date,
+        Customer_Id
+    )
+VALUES (1003, '2020-10-22', 15);
 
 INSERT INTO
-    S_Order_T (Order_Id, Order_Date, Customer_Id)
-VALUES
-    (1004, '2020-10-22', 5);
+    S_Order_T (
+        Order_Id,
+        Order_Date,
+        Customer_Id
+    )
+VALUES (1004, '2020-10-22', 5);
 
 INSERT INTO
-    S_Order_T (Order_Id, Order_Date, Customer_Id)
-VALUES
-    (1005, '2020-10-24', 3);
+    S_Order_T (
+        Order_Id,
+        Order_Date,
+        Customer_Id
+    )
+VALUES (1005, '2020-10-24', 3);
 
 INSERT INTO
-    S_Order_T (Order_Id, Order_Date, Customer_Id)
-VALUES
-    (1006, '2020-10-24', 2);
+    S_Order_T (
+        Order_Id,
+        Order_Date,
+        Customer_Id
+    )
+VALUES (1006, '2020-10-24', 2);
 
 INSERT INTO
-    S_Order_T (Order_Id, Order_Date, Customer_Id)
-VALUES
-    (1007, '2020-10-27', 11);
+    S_Order_T (
+        Order_Id,
+        Order_Date,
+        Customer_Id
+    )
+VALUES (1007, '2020-10-27', 11);
 
 INSERT INTO
-    S_Order_T (Order_Id, Order_Date, Customer_Id)
-VALUES
-    (1008, '2020-10-30', 12);
+    S_Order_T (
+        Order_Id,
+        Order_Date,
+        Customer_Id
+    )
+VALUES (1008, '2020-10-30', 12);
 
 INSERT INTO
-    S_Order_T (Order_Id, Order_Date, Customer_Id)
-VALUES
-    (1009, '2020-11-05', 4);
+    S_Order_T (
+        Order_Id,
+        Order_Date,
+        Customer_Id
+    )
+VALUES (1009, '2020-11-05', 4);
 
 INSERT INTO
-    S_Order_T (Order_Id, Order_Date, Customer_Id)
-VALUES
-    (1010, '2020-11-05', 1);
+    S_Order_T (
+        Order_Id,
+        Order_Date,
+        Customer_Id
+    )
+VALUES (1010, '2020-11-05', 1);
 
 -- #endregion
 -- #region Insert data into the TABLE: S_PRODUCT_t
@@ -404,8 +413,7 @@ INSERT INTO
         Product_Finish,
         Standard_Price
     )
-VALUES
-    (1, 'End Table', 'Cherry', 175);
+VALUES (1, 'End Table', 'Cherry', 175);
 
 INSERT INTO
     S_Product_T (
@@ -414,8 +422,12 @@ INSERT INTO
         Product_Finish,
         Standard_Price
     )
-VALUES
-    (2, 'Coffe Table', 'Natural Ash', 200);
+VALUES (
+        2,
+        'Coffe Table',
+        'Natural Ash',
+        200
+    );
 
 INSERT INTO
     S_Product_T (
@@ -424,8 +436,12 @@ INSERT INTO
         Product_Finish,
         Standard_Price
     )
-VALUES
-    (3, 'Computer Desk', 'Natural Ash', 375);
+VALUES (
+        3,
+        'Computer Desk',
+        'Natural Ash',
+        375
+    );
 
 INSERT INTO
     S_Product_T (
@@ -434,8 +450,12 @@ INSERT INTO
         Product_Finish,
         Standard_Price
     )
-VALUES
-    (4, 'Entertainment Center', 'Natural Maple', 650);
+VALUES (
+        4,
+        'Entertainment Center',
+        'Natural Maple',
+        650
+    );
 
 INSERT INTO
     S_Product_T (
@@ -444,8 +464,12 @@ INSERT INTO
         Product_Finish,
         Standard_Price
     )
-VALUES
-    (5, 'Writers Desk', 'Cherry', 325);
+VALUES (
+        5,
+        'Writers Desk',
+        'Cherry',
+        325
+    );
 
 INSERT INTO
     S_Product_T (
@@ -454,8 +478,12 @@ INSERT INTO
         Product_Finish,
         Standard_Price
     )
-VALUES
-    (6, '8-Drawer Desk', 'White Ash', 750);
+VALUES (
+        6,
+        '8-Drawer Desk',
+        'White Ash',
+        750
+    );
 
 INSERT INTO
     S_Product_T (
@@ -464,8 +492,12 @@ INSERT INTO
         Product_Finish,
         Standard_Price
     )
-VALUES
-    (7, 'Dining Table', 'Natural Ash', 800);
+VALUES (
+        7,
+        'Dining Table',
+        'Natural Ash',
+        800
+    );
 
 INSERT INTO
     S_Product_T (
@@ -474,100 +506,158 @@ INSERT INTO
         Product_Finish,
         Standard_Price
     )
-VALUES
-    (8, 'Computer Desk', 'Walnut', 250);
+VALUES (
+        8,
+        'Computer Desk',
+        'Walnut',
+        250
+    );
 
 -- #endregion
 -- #region Insert data into the TABLE: S_Order_Line_T
 INSERT INTO
-    S_Order_Line_T (Order_Id, Product_Id, Ordered_Quantity)
-VALUES
-    (1001, 1, 2);
+    S_Order_Line_T (
+        Order_Id,
+        Product_Id,
+        Ordered_Quantity
+    )
+VALUES (1001, 1, 2);
 
 INSERT INTO
-    S_Order_Line_T (Order_Id, Product_Id, Ordered_Quantity)
-VALUES
-    (1001, 2, 2);
+    S_Order_Line_T (
+        Order_Id,
+        Product_Id,
+        Ordered_Quantity
+    )
+VALUES (1001, 2, 2);
 
 INSERT INTO
-    S_Order_Line_T (Order_Id, Product_Id, Ordered_Quantity)
-VALUES
-    (1001, 4, 1);
+    S_Order_Line_T (
+        Order_Id,
+        Product_Id,
+        Ordered_Quantity
+    )
+VALUES (1001, 4, 1);
 
 INSERT INTO
-    S_Order_Line_T (Order_Id, Product_Id, Ordered_Quantity)
-VALUES
-    (1002, 3, 5);
+    S_Order_Line_T (
+        Order_Id,
+        Product_Id,
+        Ordered_Quantity
+    )
+VALUES (1002, 3, 5);
 
 INSERT INTO
-    S_Order_Line_T (Order_Id, Product_Id, Ordered_Quantity)
-VALUES
-    (1003, 3, 3);
+    S_Order_Line_T (
+        Order_Id,
+        Product_Id,
+        Ordered_Quantity
+    )
+VALUES (1003, 3, 3);
 
 INSERT INTO
-    S_Order_Line_T (Order_Id, Product_Id, Ordered_Quantity)
-VALUES
-    (1004, 6, 2);
+    S_Order_Line_T (
+        Order_Id,
+        Product_Id,
+        Ordered_Quantity
+    )
+VALUES (1004, 6, 2);
 
 INSERT INTO
-    S_Order_Line_T (Order_Id, Product_Id, Ordered_Quantity)
-VALUES
-    (1004, 8, 2);
+    S_Order_Line_T (
+        Order_Id,
+        Product_Id,
+        Ordered_Quantity
+    )
+VALUES (1004, 8, 2);
 
 INSERT INTO
-    S_Order_Line_T (Order_Id, Product_Id, Ordered_Quantity)
-VALUES
-    (1005, 4, 3);
+    S_Order_Line_T (
+        Order_Id,
+        Product_Id,
+        Ordered_Quantity
+    )
+VALUES (1005, 4, 3);
 
 INSERT INTO
-    S_Order_Line_T (Order_Id, Product_Id, Ordered_Quantity)
-VALUES
-    (1006, 4, 1);
+    S_Order_Line_T (
+        Order_Id,
+        Product_Id,
+        Ordered_Quantity
+    )
+VALUES (1006, 4, 1);
 
 INSERT INTO
-    S_Order_Line_T (Order_Id, Product_Id, Ordered_Quantity)
-VALUES
-    (1006, 5, 2);
+    S_Order_Line_T (
+        Order_Id,
+        Product_Id,
+        Ordered_Quantity
+    )
+VALUES (1006, 5, 2);
 
 INSERT INTO
-    S_Order_Line_T (Order_Id, Product_Id, Ordered_Quantity)
-VALUES
-    (1006, 7, 2);
+    S_Order_Line_T (
+        Order_Id,
+        Product_Id,
+        Ordered_Quantity
+    )
+VALUES (1006, 7, 2);
 
 INSERT INTO
-    S_Order_Line_T (Order_Id, Product_Id, Ordered_Quantity)
-VALUES
-    (1007, 1, 3);
+    S_Order_Line_T (
+        Order_Id,
+        Product_Id,
+        Ordered_Quantity
+    )
+VALUES (1007, 1, 3);
 
 INSERT INTO
-    S_Order_Line_T (Order_Id, Product_Id, Ordered_Quantity)
-VALUES
-    (1007, 2, 2);
+    S_Order_Line_T (
+        Order_Id,
+        Product_Id,
+        Ordered_Quantity
+    )
+VALUES (1007, 2, 2);
 
 INSERT INTO
-    S_Order_Line_T (Order_Id, Product_Id, Ordered_Quantity)
-VALUES
-    (1008, 3, 3);
+    S_Order_Line_T (
+        Order_Id,
+        Product_Id,
+        Ordered_Quantity
+    )
+VALUES (1008, 3, 3);
 
 INSERT INTO
-    S_Order_Line_T (Order_Id, Product_Id, Ordered_Quantity)
-VALUES
-    (1008, 8, 3);
+    S_Order_Line_T (
+        Order_Id,
+        Product_Id,
+        Ordered_Quantity
+    )
+VALUES (1008, 8, 3);
 
 INSERT INTO
-    S_Order_Line_T (Order_Id, Product_Id, Ordered_Quantity)
-VALUES
-    (1009, 4, 2);
+    S_Order_Line_T (
+        Order_Id,
+        Product_Id,
+        Ordered_Quantity
+    )
+VALUES (1009, 4, 2);
 
 INSERT INTO
-    S_Order_Line_T (Order_Id, Product_Id, Ordered_Quantity)
-VALUES
-    (1009, 7, 3);
+    S_Order_Line_T (
+        Order_Id,
+        Product_Id,
+        Ordered_Quantity
+    )
+VALUES (1009, 7, 3);
 
 INSERT INTO
-    S_Order_Line_T (Order_Id, Product_Id, Ordered_Quantity)
-VALUES
-    (1010, 8, 10);
+    S_Order_Line_T (
+        Order_Id,
+        Product_Id,
+        Ordered_Quantity
+    )
+VALUES (1010, 8, 10);
 
 -- #endregion
 DESC S_Order_Line_T;
@@ -581,89 +671,55 @@ DESC S_CUSTOMER_t;
 -- ! Small DB: Pine Valley Furniture Company
 -- #region HW 4
 -- 1.	List all customers
-SELECT
-    *
-FROM
-    S_CUSTOMER_t;
+SELECT * FROM S_CUSTOMER_t;
 
 -- 2.	What is the address of the customer named Home Furnishings? Use Alias, Name for customer name.
 SELECT
     Customer_Name AS Name,
     Customer_Address
-FROM
-    S_CUSTOMER_t
+FROM S_CUSTOMER_t
 WHERE
     Customer_Name = 'Home Furnishings';
 
 -- 3.	Which Product has a standard price of less than $200?
-SELECT
-    *
-FROM
-    S_PRODUCT_t
-WHERE
-    Standard_Price < 200;
+SELECT * FROM S_PRODUCT_t WHERE Standard_Price < 200;
 
 -- 4.	What is the average standard price of products?
-SELECT
-    AVG(Standard_Price) AS Average_Standard_Price
-FROM
-    S_PRODUCT_t;
+SELECT AVG(Standard_Price) AS Average_Standard_Price
+FROM S_PRODUCT_t;
 
 -- 5.	What is the price of most expensive product in inventory?
-SELECT
-    MAX(Standard_Price) AS Most_Expensive_Product
-FROM
-    S_PRODUCT_t;
+SELECT MAX(Standard_Price) AS Most_Expensive_Product
+FROM S_PRODUCT_t;
 
 -- 5.2 Find the product that is the most expensive in inventory.
-SELECT
-    *
-FROM
-    S_PRODUCT_t
+SELECT *
+FROM S_PRODUCT_t
 WHERE
     Standard_Price = (
-        SELECT
-            MAX(Standard_Price)
-        FROM
-            S_PRODUCT_t
+        SELECT MAX(Standard_Price)
+        FROM S_PRODUCT_t
     );
 
 -- 6.	Count all orders.
-SELECT
-    COUNT(Order_Id) AS Total_Orders
-FROM
-    S_ORDER_t;
+SELECT COUNT(Order_Id) AS Total_Orders FROM S_ORDER_t;
 
 -- 7.	How many different kinds of items were ordered on order number 1006?
-SELECT
-    COUNT(DISTINCT Product_Id) AS Different_Items_Ordered
-FROM
-    S_Order_Line_t
+SELECT COUNT(DISTINCT Product_Id) AS Different_Items_Ordered
+FROM S_Order_Line_t
 WHERE
     Order_Id = 1006;
 
 -- 8.	Which order have been placed before 2020-10-24?
-SELECT
-    *
-FROM
-    S_ORDER_t
-WHERE
-    Order_Date < '2020-10-24';
+SELECT * FROM S_ORDER_t WHERE Order_Date < '2020-10-24';
 
 -- 9.	Alphabetically, what is the last product name in the PRODUCT table? Use an alias NAME
-SELECT
-    Product_Description AS NAME
-FROM
-    S_PRODUCT_t
-ORDER BY
-    Product_Description DESC
-LIMIT
-    1;
+SELECT Product_Description AS NAME
+FROM S_PRODUCT_t
+ORDER BY Product_Description DESC
+LIMIT 1;
 
-SELECT
-    *
-FROM
-    S_CUSTOMER_t;
+SELECT * FROM S_CUSTOMER_t;
 
 --#endregion
 -- #region HW 5
@@ -672,12 +728,7 @@ FROM
 -- CONCAT() combine attributes into one string value
 -- AS is used to rename a column or table with an alias
 --? SQL STATEMENTS
-SELECT
-    *
-FROM
-    S_CUSTOMER_t
-WHERE
-    Customer_Id = 1;
+SELECT * FROM S_CUSTOMER_t WHERE Customer_Id = 1;
 
 --USE TO FIND CUSTOMER BY ID
 -- 1.	What are the names of all customers who have placed orders?
@@ -686,15 +737,10 @@ SELECT DISTINCT
 FROM
     S_CUSTOMER_t AS SC
     JOIN S_ORDER_t AS SO ON SC.Customer_Id = SO.Customer_Id
-ORDER BY
-    Customer_Name;
+ORDER BY Customer_Name;
 
 -- 2.	What are the product descriptions ordered by the customer ID, 1?
-SELECT
-    Customer_Name,
-    SO.Order_Id,
-    Product_Description,
-    Ordered_Quantity
+SELECT SC.Customer_Id, SC.Customer_Name, SP.Product_Description, SO.Order_Id, Ordered_Quantity
 FROM
     S_PRODUCT_t AS SP
     JOIN S_Order_Line_t AS SOL ON SP.Product_Id = SOL.Product_Id
@@ -702,15 +748,12 @@ FROM
     JOIN S_CUSTOMER_t AS SC ON SO.Customer_Id = SC.Customer_ID
 WHERE
     SO.Customer_Id = 1
-ORDER BY
-    SO.Order_Id,
-    Product_Description;
+ORDER BY SO.Order_Id, SP.Product_Description;
 
 -- 3.	What are the product descriptions ordered by the customer, ‘Impressions’?
-SELECT
-    Product_Description,
-    Customer_Name
-FROM S_PRODUCT_t AS SP
+SELECT SC.Customer_Id, SC.Customer_Name, SP.Product_Description, SO.Order_Id, Ordered_Quantity
+FROM
+    S_PRODUCT_t AS SP
     JOIN S_Order_Line_t AS SOL ON SP.Product_Id = SOL.Product_Id
     JOIN S_ORDER_t AS SO ON SOL.Order_Id = SO.Order_Id
     JOIN S_CUSTOMER_t AS SC ON SO.Customer_Id = SC.Customer_Id
@@ -718,19 +761,25 @@ WHERE
     Customer_Name = 'Impressions';
 
 -- 4.	List all customers’ names that have placed an order that contains a product whose standard price is over 500.
-SELECT Customer_Name, Product_Description, Standard_Price
-FROM S_CUSTOMER_t AS SC
+SELECT
+    SC.Customer_Id,
+    SC.`Customer_Address` Customer_Name,
+    Product_Description,
+    Standard_Price
+FROM
+    S_CUSTOMER_t AS SC
     JOIN S_ORDER_t AS SO ON SC.Customer_Id = SO.Customer_Id
     JOIN S_Order_Line_t AS SOL ON SO.Order_Id = SOL.Order_Id
     JOIN S_PRODUCT_t AS SP ON SOL.Product_Id = SP.Product_Id
-WHERE Standard_Price > 500
+WHERE
+    Standard_Price > 500
 ORDER BY Standard_Price DESC;
 
 -- 5.	List all customers. Print the order ID (s) along the customer information IF they have submitted the order(s).
 SELECT
     SO.Order_ID,
     SC.Customer_Name,
-    CONCAT (
+    CONCAT(
         SC.Customer_Address,
         ', ',
         SC.Customer_City,
@@ -742,7 +791,8 @@ SELECT
     SP.Product_Description,
     SP.Standard_Price,
     SOL.Ordered_Quantity AS Order_Quantity
-FROM S_CUSTOMER_t AS SC
+FROM
+    S_CUSTOMER_t AS SC
     INNER JOIN S_ORDER_t AS SO ON SC.Customer_Id = SO.Customer_Id
     INNER JOIN S_Order_Line_t AS SOL ON SO.Order_Id = SOL.Order_Id
     INNER JOIN S_PRODUCT_t AS SP ON SOL.Product_Id = SP.Product_Id
@@ -754,8 +804,11 @@ SELECT
     SP.Product_Description,
     SOL.Ordered_Quantity,
     SP.Standard_Price AS Price_Per_Product,
-    (SOL.Ordered_Quantity * SP.Standard_Price) AS Subtotal_Amount
-FROM S_ORDER_t AS SO
+    (
+        SOL.Ordered_Quantity * SP.Standard_Price
+    ) AS Subtotal_Amount
+FROM
+    S_ORDER_t AS SO
     INNER JOIN S_Order_Line_t AS SOL ON SO.Order_Id = SOL.Order_Id
     INNER JOIN S_PRODUCT_t AS SP ON SOL.Product_Id = SP.Product_Id
 ORDER BY SO.Order_Id, SP.Product_Description;
@@ -764,17 +817,19 @@ ORDER BY SO.Order_Id, SP.Product_Description;
 SELECT DISTINCT
     SO.Order_Id,
     GROUP_CONCAT(
-        DISTINCT SP.Product_Description 
+        DISTINCT SP.Product_Description
         ORDER BY SP.Product_Description 
-        SEPARATOR ', ') 
-    AS Product_Description,
-    SUM(SOL.Ordered_Quantity * SP.Standard_Price) AS Total_Amount
-FROM S_ORDER_t AS SO
+        SEPARATOR ', '
+    ) AS Product_Description,
+    SUM(
+        SOL.Ordered_Quantity * SP.Standard_Price
+    ) AS Total_Amount
+FROM
+    S_ORDER_t AS SO
     INNER JOIN S_Order_Line_t AS SOL ON SO.Order_Id = SOL.Order_Id
     INNER JOIN S_PRODUCT_t AS SP ON SOL.Product_Id = SP.Product_Id
-GROUP BY SO.Order_Id
+GROUP BY
+    SO.Order_Id
 ORDER BY SO.Order_Id;
-
-
 
 -- #endregion
