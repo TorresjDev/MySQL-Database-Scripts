@@ -1,7 +1,6 @@
--- * FMDS Tables 
+-- !  FMDS Tables 
 
 -- ? USER – Strong Entity
--- Represents the main FMDS user managing personal finances.
 CREATE TABLE User (
     User_ID INT NOT NULL AUTO_INCREMENT,
     Full_Name VARCHAR(100) NOT NULL,
@@ -22,7 +21,6 @@ CREATE TABLE User (
 
 
 -- ? BUSINESS_USER – Weak Entity
--- Represents a business user with additional attributes.
 CREATE TABLE Business_User (
     Business_ID INT NOT NULL AUTO_INCREMENT,
     User_ID INT NOT NULL,
@@ -37,7 +35,6 @@ CREATE TABLE Business_User (
 );
 
 -- ? CREDIT_REPORT – Strong Entity
--- Represents the credit report of a user, which is a strong entity.
 CREATE TABLE Credit_Report (
       Credit_Report_ID INT NOT NULL AUTO_INCREMENT,
       User_ID INT NOT NULL,
@@ -50,14 +47,13 @@ CREATE TABLE Credit_Report (
 );
 
 -- ? TAX_REPORT – Strong Entity
--- Represents the tax report of a user, which is a strong entity.
 CREATE TABLE Tax_Report (
     Tax_Report_ID INT NOT NULL AUTO_INCREMENT,
     User_ID INT NOT NULL,
     Transaction_ID INT NOT NULL,
     Tax_Year YEAR NOT NULL,
-    Filing_Status VARCHAR(30) CHECK (Filing_Status IN ('Single', 'Married Filing Jointly', 'Married Filing Separately', 'Head of Household', 'Qualifying Widow(er)')),
-    Tax_Category VARCHAR(50)),
+    Filing_Status VARCHAR(30) CHECK (Filing_Status IN ('Single', 'Married Filing Jointly', 'Married Filing Separately', 'Head of Household', 'Qualifying Surviving Spouse')),
+    Tax_Category VARCHAR(50),
     Taxable_Amount DECIMAL(10, 2),
     Identified_Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     Spouse_Income DECIMAL(10, 2),
@@ -81,3 +77,64 @@ CREATE TABLE Transaction (
     CONSTRAINT PK_Transaction PRIMARY KEY (Transaction_ID),
     CONSTRAINT FK_Account_Transaction FOREIGN KEY (Account_ID) REFERENCES Financial_Account(Account_ID)
 );
+
+-- ? FINANCIAL_ACCOUNT – Strong Entity
+CREATE TABLE Fincancial_Account (
+    Account_ID INT NOT NULL AUTO_INCREMENT,
+    User_ID INT NOT NULL,
+    Institution_Name VARCHAR(100) NOT NULL,
+    Account_Type VARCHAR(30) NOT NULL CHECK (Account_Type IN ('Bank', 'Loan', 'Investment', 'Digital Asset', 'Credit')),
+    Account_Name VARCHAR(100) NOT NULL,
+    Account_Number VARCHAR(30) NOT NULL,
+    Account_Balance DECIMAL(12, 2) NOT NULL,
+    Date_Account_Opened DATE NOT NULL,
+    CONSTRAINT PK_Financial_Account PRIMARY KEY (Account_ID),
+    CONSTRAINT FK_User_Account FOREIGN KEY (User_ID) REFERENCES User(User_ID)
+);
+
+-- ? Bank_Account – Weak Entity
+CREATE TABLE Bank_Account (
+    Account_ID INT NOT NULL AUTO_INCREMENT,
+    Routing_Number CHAR(9) NOT NULL,
+    APY DECIMAL(5, 2),
+    CONSTRAINT PK_Bank_Account PRIMARY KEY (Account_ID),
+    CONSTRAINT FK_Financial_Account_Bank FOREIGN KEY (Account_ID) REFERENCES Financial_Account(Account_ID)
+);
+
+-- ? Loan_Account – Weak Entity
+CREATE TABLE Loan_Account (
+    Account_ID INT NOT NULL AUTO_INCREMENT,
+    Loan_Type VARCHAR(50) NOT NULL,
+    Loan_Amount DECIMAL(12, 2) NOT NULL,
+    Loan_Term INT NOT NULL,
+    Interest_Rate DECIMAL(5, 2) NOT NULL,
+    Exp_Monthly_Payment DECIMAL(10, 2) NOT NULL,
+    Start_Date DATE NOT NULL,
+    End_Date DATE NOT NULL,
+    Remaining_Balance DECIMAL(12, 2) NOT NULL,
+    CONSTRAINT PK_Loan_Account PRIMARY KEY (Account_ID),
+    CONSTRAINT FK_Financial_Account_Loan FOREIGN KEY (Account_ID) REFERENCES Financial_Account(Account_ID)
+);
+
+-- ? Investment_Account – Weak Entity
+CREATE TABLE Investment_Account (
+    Account_ID INT NOT NULL AUTO_INCREMENT,
+    Investment_Account_Type VARCHAR(50) NOT NULL,
+    Total_User_Contribution DECIMAL(12, 2) NOT NULL,
+    Total_Holdings_Amount DECIMAL(12, 2) NOT NULL,
+    CONSTRAINT PK_Investment_Account PRIMARY KEY (Account_ID),
+    CONSTRAINT FK_Financial_Account_Investment FOREIGN KEY (Account_ID) REFERENCES Financial_Account(Account_ID)
+);
+
+-- ? Digital_Asset_Account – Weak Entity
+CREATE TABLE Digital_Asset_Account (
+    Account_ID INT NOT NULL AUTO_INCREMENT,
+    Digital_Account_Type VARCHAR(50) NOT NULL,
+    Wallet_Address VARCHAR(100) UNIQUE NOT NULL,
+    Total_User_Contribution DECIMAL(12, 2) NOT NULL,
+    Total_Holdings_Amount DECIMAL(12, 2) NOT NULL,
+    Digital_Portfolio_Value DECIMAL(12, 2),
+    CONSTRAINT PK_Digital_Asset_Account PRIMARY KEY (Account_ID),
+    CONSTRAINT FK_Financial_Account_Digital FOREIGN KEY (Account_ID) REFERENCES Financial_Account(Account_ID)
+);
+

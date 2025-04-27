@@ -12,7 +12,7 @@
 
 
 -- ------------------------------------------------------------
--- TODO: SECTION 1: CREATE THE DATABASE
+-- TODO: SECTION 1: CREATE THE DATABASE 
 -- ------------------------------------------------------------
 -- This creates the FMDS database to store all financial entities.
 CREATE DATABASE FMDS;
@@ -152,7 +152,6 @@ CREATE TABLE Credit_Report (
       CONSTRAINT PK_Credit_Report PRIMARY KEY (Credit_Report_ID),
       CONSTRAINT FK_User_Credit FOREIGN KEY (User_ID) REFERENCES User(User_ID)
 );
-
 -- #endregion 3: Credit_Report
 
 -- #region 4: Tax_Report
@@ -202,6 +201,7 @@ CREATE TABLE Tax_Report (
     CONSTRAINT FK_User_Tax FOREIGN KEY (User_ID) REFERENCES User(User_ID),
     CONSTRAINT FK_Transaction_Tax FOREIGN KEY (Transaction_ID) REFERENCES Transaction(Transaction_ID)
 );
+
 -- #endregion 4: Tax_Report
 
 -- #region 5: Transaction
@@ -274,12 +274,25 @@ CREATE TABLE Transaction (
 -- • Each account links to many transactions, holdings, or assets (1:M)
 -- ------------------------------------------------------------
 
+CREATE TABLE Fincancial_Account (
+    Account_ID INT NOT NULL AUTO_INCREMENT,
+    User_ID INT NOT NULL,
+    Institution_Name VARCHAR(100) NOT NULL,
+    Account_Type VARCHAR(30) NOT NULL CHECK (Account_Type IN ('Bank', 'Loan', 'Investment', 'Digital Asset', 'Credit')),
+    Account_Name VARCHAR(100) NOT NULL,
+    Account_Number VARCHAR(30) NOT NULL,
+    Account_Balance DECIMAL(12, 2) NOT NULL,
+    Date_Account_Opened DATE NOT NULL,
+    CONSTRAINT PK_Financial_Account PRIMARY KEY (Account_ID),
+    CONSTRAINT FK_User_Account FOREIGN KEY (User_ID) REFERENCES User(User_ID)
+);
+
 
 -- #endregion 6: Financial_Account
 
 -- #region 7: Credit_Account
 -- ------------------------------------------------------------
--- CREDIT_ACCOUNT – Subtype of Financial_Account
+-- ! CREDIT_ACCOUNT – Subtype of Financial_Account
 -- ------------------------------------------------------------
 -- Stores credit-specific details linked to a financial account.
 -- Includes credit limits, interest rates, billing cycles, and balance tracking.
@@ -302,12 +315,25 @@ CREATE TABLE Transaction (
 -- • Masked card numbers are fine for storage (e.g., '**** **** **** 1234')
 -- ------------------------------------------------------------
 
+CREATE TABLE Credit_Account (
+    Account_ID INT NOT NULL AUTO_INCREMENT,
+    Credit_Type VARCHAR(30) NOT NULL,
+    Credit_Card_Number VARCHAR(25) NOT NULL,
+    Credit_Limit DECIMAL(12, 2) NOT NULL,
+    Interest_Rate DECIMAL(5, 2) NOT NULL,
+    Billing_Cycle_Due_Date DATE NOT NULL,
+    Card_Expiration_Date CHAR(7) NOT NULL,
+    Remaining_Balance DECIMAL(12, 2) NOT NULL,
+    CONSTRAINT PK_Credit_Account PRIMARY KEY (Account_ID),
+    CONSTRAINT FK_Financial_Account_Credit FOREIGN KEY (Account_ID) REFERENCES Financial_Account(Account_ID)
+);
+
 
 -- #endregion 7: Credit_Account
 
 -- #region 8: Bank_Account
 -- ------------------------------------------------------------
--- BANK_ACCOUNT – Subtype of Financial_Account
+-- ! BANK_ACCOUNT – Subtype of Financial_Account
 -- ------------------------------------------------------------
 -- Stores bank-specific fields for standard checking or savings accounts.
 -- Includes routing details and interest earnings from APY.
@@ -325,6 +351,14 @@ CREATE TABLE Transaction (
 -- • Use CHECK or ENUM constraints if you track bank account types separately
 -- ------------------------------------------------------------
 
+CREATE TABLE Bank_Account (
+    Account_ID INT NOT NULL AUTO_INCREMENT,
+    Routing_Number CHAR(9) NOT NULL,
+    APY DECIMAL(5, 2),
+    CONSTRAINT PK_Bank_Account PRIMARY KEY (Account_ID),
+    CONSTRAINT FK_Financial_Account_Bank FOREIGN KEY (Account_ID) REFERENCES Financial_Account(Account_ID)
+);
+
 
 
 
@@ -332,7 +366,7 @@ CREATE TABLE Transaction (
 
 -- #region 9: Loan_Account
 -- ------------------------------------------------------------
--- LOAN_ACCOUNT – Subtype of Financial_Account
+-- ! LOAN_ACCOUNT – Subtype of Financial_Account
 -- ------------------------------------------------------------
 -- Stores loan-specific data for tracking long-term borrowing accounts,
 -- such as mortgages, auto loans, personal loans, or business financing.
@@ -356,11 +390,25 @@ CREATE TABLE Transaction (
 -- • This model supports future analytics like payment tracking and amortization
 -- ------------------------------------------------------------
 
+CREATE TABLE Loan_Account (
+    Account_ID INT NOT NULL AUTO_INCREMENT,
+    Loan_Type VARCHAR(50) NOT NULL,
+    Loan_Amount DECIMAL(12, 2) NOT NULL,
+    Loan_Term INT NOT NULL,
+    Interest_Rate DECIMAL(5, 2) NOT NULL,
+    Exp_Monthly_Payment DECIMAL(10, 2) NOT NULL,
+    Start_Date DATE NOT NULL,
+    End_Date DATE NOT NULL,
+    Remaining_Balance DECIMAL(12, 2) NOT NULL,
+    CONSTRAINT PK_Loan_Account PRIMARY KEY (Account_ID),
+    CONSTRAINT FK_Financial_Account_Loan FOREIGN KEY (Account_ID) REFERENCES Financial_Account(Account_ID)
+);
+
 -- #endregion 9: Loan_Account
 
 -- #region 10: Investment_Account
 -- ------------------------------------------------------------
--- INVESTMENT_ACCOUNT – Subtype of Financial_Account
+-- ! INVESTMENT_ACCOUNT – Subtype of Financial_Account
 -- ------------------------------------------------------------
 -- Tracks investment-related financial accounts, including user
 -- contributions and total portfolio value across all holdings.
@@ -379,11 +427,119 @@ CREATE TABLE Transaction (
 -- • This entity supports portfolio tracking, asset allocation, and performance reporting
 -- ------------------------------------------------------------
 
+CREATE TABLE Investment_Account (
+    Account_ID INT NOT NULL AUTO_INCREMENT,
+    Investment_Account_Type VARCHAR(50) NOT NULL,
+    Total_User_Contribution DECIMAL(12, 2) NOT NULL,
+    Total_Holdings_Amount DECIMAL(12, 2) NOT NULL,
+    CONSTRAINT PK_Investment_Account PRIMARY KEY (Account_ID),
+    CONSTRAINT FK_Financial_Account_Investment FOREIGN KEY (Account_ID) REFERENCES Financial_Account(Account_ID)
+);
 -- #endregion 10: Investment_Account
 
--- #region 11: Digital_Asset_Account
+-- #region 11: Investment_Asset
 -- ------------------------------------------------------------
--- DIGITAL_ASSET_ACCOUNT – Subtype of Financial_Account
+-- ! INVESTMENT_ASSET – Weak Entity
+-- ------------------------------------------------------------
+-- Tracks every investment action (buy, sell, dividend, split, etc.)
+-- tied to a specific holding and investment account. Each record
+-- contributes to calculating total value, quantity, and average price
+-- within the associated holding.
+
+-- Attributes:
+-- - Action_ID: INT, surrogate primary key (auto-increment)
+-- - Holdings_ID: INT, FK to Investment_Holdings(Holdings_ID)
+-- - Account_ID: INT, FK to Investment_Account(Account_ID)
+-- - Action_Type: VARCHAR(20), e.g., 'Buy', 'Sell', 'Dividend', 'Split'
+-- - Symbol: VARCHAR(15), asset symbol involved in the transaction
+-- - Quantity: DECIMAL(12, 4), total units involved
+-- - Price_Per_Share: DECIMAL(12, 4), unit cost at transaction time
+-- - Total_Price: DECIMAL(14, 2), calculated = Quantity × Price_Per_Share
+-- - Timestamp: DATETIME, exact time of the trade or adjustment
+-- - Broker_Fee: DECIMAL(10, 2), any applicable transaction fees
+-- - Optional_Note: TEXT, remarks or transaction details
+
+-- Design Notes:
+-- • Weak entity – must be linked to both a Holding and Investment Account
+-- • Action_ID can serve as the PK for easier indexing
+-- • Action_Type should be constrained using ENUM or CHECK
+-- • Timestamp used for historical reporting and trade tracking
+-- • Total_Price may be computed or stored for query performance
+-- • Holding updates (total value, avg. price) should reflect all actions
+-- ------------------------------------------------------------
+
+CREATE TABLE Investment_Asset (
+    Action_ID INT NOT NULL AUTO_INCREMENT,
+    Holdings_ID INT NOT NULL,
+    Account_ID INT NOT NULL,
+    Action_Type VARCHAR(20) NOT NULL,
+    Symbol VARCHAR(15) NOT NULL,
+    Quantity DECIMAL(12, 4) NOT NULL,
+    Price_Per_Share DECIMAL(12, 4) NOT NULL,
+    Total_Price DECIMAL(14, 2) NOT NULL,
+    Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Broker_Fee DECIMAL(10, 2),
+    Optional_Note TEXT,
+    CONSTRAINT PK_Investment_Asset PRIMARY KEY (Action_ID),
+    CONSTRAINT FK_Holdings_Investment FOREIGN KEY (Holdings_ID) REFERENCES Investment_Holding(Holdings_ID),
+    CONSTRAINT FK_Account_Investment FOREIGN KEY (Account_ID) REFERENCES Investment_Account(Account_ID)
+);
+-- #endregion 11: Investment_Asset
+
+-- #region 12: Investment_Asset_Holding
+-- ------------------------------------------------------------
+-- ! INVESTMENT_HOLDINGS – Strong Entity
+-- ------------------------------------------------------------
+-- Represents a user's collection of transactions grouped under
+-- a specific investment symbol, such as a stock, ETF, or option.
+-- Tracks combined performance, quantity, gains, and valuation.
+
+-- Attributes:
+-- - Holdings_ID: INT, primary key (auto-incremented)
+-- - Account_ID: INT, FK to Investment_Account(Account_ID)
+-- - Investment_Type: VARCHAR(30), e.g., 'Stock', 'ETF', 'Option'
+-- - Investment_Symbol: VARCHAR(15), e.g., 'AAPL', 'TSLA', 'VOO'
+-- - Total_Quantity: DECIMAL(12, 4), combined quantity across all actions
+-- - Total_Purchase_Price: DECIMAL(14, 2), total cost basis
+-- - Average_Price_Per_Share: DECIMAL(12, 4), average cost per unit
+-- - Current_Price: DECIMAL(12, 4), latest market price
+-- - Total_Value: DECIMAL(14, 2), current quantity × current price
+-- - Unrealized_Gain_Or_Loss: DECIMAL(14, 2), gain or loss not yet sold
+-- - Realized_Gain_Or_Loss: DECIMAL(14, 2), actual gain/loss from closed positions
+-- - Date_Opened: DATE, when the first position under this symbol started
+-- - Holding_Status: VARCHAR(20), e.g., 'Open', 'Closed', 'Partially Sold'
+
+-- Design Notes:
+-- • Each holding must belong to one Investment Account (1:M)
+-- • Aggregate data like Total_Quantity and Avg_Price update after every new action
+-- • Holding status helps track if the position is active or fully liquidated
+-- • Strong entity, not dependent on assets — but updated based on asset activity
+-- • Allows portfolio performance reporting and position tracking
+-- ------------------------------------------------------------
+
+
+CREATE TABLE Investment_Holding (
+    Holdings_ID INT NOT NULL AUTO_INCREMENT,
+    Account_ID INT NOT NULL,
+    Investment_Type VARCHAR(30) NOT NULL,
+    Investment_Symbol VARCHAR(15) NOT NULL,
+    Total_Quantity DECIMAL(12, 4) NOT NULL,
+    Total_Purchase_Price DECIMAL(14, 2) NOT NULL,
+    Average_Price_Per_Share DECIMAL(12, 4) NOT NULL,
+    Current_Price DECIMAL(12, 4) NOT NULL,
+    Total_Value DECIMAL(14, 2) NOT NULL,
+    Unrealized_Gain_Or_Loss DECIMAL(14, 2),
+    Realized_Gain_Or_Loss DECIMAL(14, 2),
+    Date_Opened DATE NOT NULL,
+    Holding_Status VARCHAR(20) NOT NULL,
+    CONSTRAINT PK_Investment_Holding PRIMARY KEY (Holdings_ID),
+    CONSTRAINT FK_Account_Holding FOREIGN KEY (Account_ID) REFERENCES Investment_Account(Account_ID)
+);
+-- #endregion 12: Invest_Asset_Holding
+
+-- #region 13: Digital_Asset_Account
+-- ------------------------------------------------------------
+-- ! DIGITAL_ASSET_ACCOUNT – Subtype of Financial_Account
 -- ------------------------------------------------------------
 -- Stores details for digital asset wallets and accounts,
 -- including wallet address, user contributions, and portfolio value.
@@ -404,21 +560,123 @@ CREATE TABLE Transaction (
 -- • Useful for tracking decentralized assets alongside traditional accounts
 -- ------------------------------------------------------------
 
--- #endregion 11: Digital_Asset_Account
+CREATE TABLE Digital_Asset_Account (
+    Account_ID INT NOT NULL AUTO_INCREMENT,
+    Digital_Account_Type VARCHAR(50) NOT NULL,
+    Wallet_Address VARCHAR(100) UNIQUE NOT NULL,
+    Total_User_Contribution DECIMAL(12, 2) NOT NULL,
+    Total_Holdings_Amount DECIMAL(12, 2) NOT NULL,
+    Digital_Portfolio_Value DECIMAL(12, 2),
+    CONSTRAINT PK_Digital_Asset_Account PRIMARY KEY (Account_ID),
+    CONSTRAINT FK_Financial_Account_Digital FOREIGN KEY (Account_ID) REFERENCES Financial_Account(Account_ID)
+);
 
--- #region 12: Investment_Asset
 
--- #endregion 12: Investment_Asset
+-- #endregion 13: Digital_Asset_Account
 
--- #region 13: Investment_Asset_Holding
+-- #region 14: Digital_Asset
+-- ------------------------------------------------------------
+-- ! DIGITAL_ASSET – Weak Entity
+-- ------------------------------------------------------------
+-- Tracks every digital asset action (buy, sell, staking reward, interest, etc.)
+-- tied to a specific digital asset holding. Each action updates the holding's
+-- total quantity, average price, and current value.
 
--- #endregion 13: Invest_Asset_Holding
+-- Attributes:
+-- - Action_ID: INT, surrogate primary key (auto-increment)
+-- - Holding_ID: INT, FK to Digital_Asset_Holdings(Holding_ID)
+-- - Account_ID: INT, FK to Digital_Asset_Account(Account_ID)
+-- - Action_Type: VARCHAR(20), e.g., 'Buy', 'Sell', 'Staking Reward', 'Interest'
+-- - Asset_Symbol: VARCHAR(15), e.g., 'BTC', 'ETH', 'SOL'
+-- - Quantity: DECIMAL(18, 8), precise quantity of the digital asset
+-- - Price_Per_Token: DECIMAL(18, 8), asset price at time of action
+-- - Total_Price: DECIMAL(20, 2), quantity × price per token
+-- - Timestamp: DATETIME, date and time of the asset movement
+-- - Transaction_Fee: DECIMAL(10, 2), optional service fee (e.g., exchange fee)
+-- - Gas_Fee: DECIMAL(10, 2), blockchain network fee (gas cost)
+-- - Optional_Note: TEXT, optional remarks or extra data
 
--- #region 14: Digital_Asset_Asset
+-- Design Notes:
+-- • Weak entity — must link to both a Holding and a Digital Asset Account
+-- • Gas_Fee specifically models decentralized transaction costs (e.g., Ethereum)
+-- • Quantity and Price_Per_Token use high precision to handle crypto decimals
+-- • Action_Type should be standardized using CHECK or ENUM constraints
+-- • Every action triggers an update to the related Digital Asset Holding totals
+-- ------------------------------------------------------------
 
--- #endregion 14: Digital_Asset_Asset
+CREATE TABLE Digital_Asset (
+    Action_ID INT NOT NULL AUTO_INCREMENT,
+    Holding_ID INT NOT NULL,
+    Account_ID INT NOT NULL,
+    Action_Type VARCHAR(20) NOT NULL,
+    Asset_Symbol VARCHAR(15) NOT NULL,
+    Quantity DECIMAL(18, 8) NOT NULL,
+    Price_Per_Token DECIMAL(18, 8) NOT NULL,
+    Total_Price DECIMAL(20, 2) NOT NULL,
+    Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Transaction_Fee DECIMAL(10, 2),
+    Gas_Fee DECIMAL(10, 2),
+    Optional_Note TEXT,
+    CONSTRAINT PK_Digital_Asset PRIMARY KEY (Action_ID),
+    CONSTRAINT FK_Holding_Digital FOREIGN KEY (Holding_ID) REFERENCES Digital_Asset_Holding(Holding_ID),
+    CONSTRAINT FK_Account_Digital FOREIGN KEY (Account_ID) REFERENCES Digital_Asset_Account(Account_ID)
+);
+
+
+
+-- #endregion 14: Digital_Asset
 
 -- #region 14: Digital_Asset_Holding
+-- ------------------------------------------------------------
+-- ! DIGITAL_ASSET_HOLDINGS – Strong Entity
+-- ------------------------------------------------------------
+-- Represents the total amount of a specific digital asset held
+-- in a user's digital wallet. Groups together all actions related
+-- to a single asset type and symbol for tracking growth and value.
+
+-- Attributes:
+-- - Holding_ID: INT, primary key (auto-incremented)
+-- - Account_ID: INT, FK to Digital_Asset_Account(Account_ID)
+-- - Digital_Asset_Type: VARCHAR(30), e.g., 'Crypto', 'NFT', 'DeFi Token'
+-- - Asset_Symbol: VARCHAR(15), e.g., 'BTC', 'ETH', 'USDC', 'BAYC'
+-- - Total_Quantity: DECIMAL(18, 8), total tokens or asset units held
+-- - Total_Purchase_Price: DECIMAL(20, 2), total invested amount
+-- - Average_Price_Per_Share: DECIMAL(18, 8), average buy cost
+-- - Current_Price: DECIMAL(18, 8), latest market price per token/unit
+-- - Total_Value: DECIMAL(20, 2), calculated = Total_Quantity × Current_Price
+-- - Unrealized_Gain_Or_Loss: DECIMAL(20, 2), gain or loss not sold yet
+-- - Realized_Gain_Or_Loss: DECIMAL(20, 2), finalized profit or loss
+-- - Date_Opened: DATE, when user first acquired the asset
+-- - Holding_Status: VARCHAR(20), e.g., 'Open', 'Closed', 'Partial'
+
+-- Design Notes:
+-- • Each holding belongs to one Digital Asset Account (1:M relationship)
+-- • Holdings track total asset amount, market value, and gain/loss history
+-- • Strong entity, aggregates actions from the Digital_Asset table
+-- • Holding status identifies active vs sold-off holdings
+-- • Supports digital asset portfolio reporting and analytics
+-- ------------------------------------------------------------
+
+CREATE TABLE Digital_Asset_Holding
+(
+    Holding_ID INT NOT NULL AUTO_INCREMENT,
+    Account_ID INT NOT NULL,
+    Digital_Asset_Type VARCHAR(30) NOT NULL,
+    Asset_Symbol VARCHAR(15) NOT NULL,
+    Total_Quantity DECIMAL(18, 8) NOT NULL,
+    Total_Purchase_Price DECIMAL(20, 2) NOT NULL,
+    Average_Price_Per_Share DECIMAL(18, 8) NOT NULL,
+    Current_Price DECIMAL(18, 8) NOT NULL,
+    Total_Value DECIMAL(20, 2) NOT NULL,
+    Unrealized_Gain_Or_Loss DECIMAL(20, 2),
+    Realized_Gain_Or_Loss DECIMAL(20, 2),
+    Date_Opened DATE NOT NULL,
+    Holding_Status VARCHAR(20) NOT NULL,
+    CONSTRAINT PK_Digital_Asset_Holding PRIMARY KEY (Holding_ID),
+    CONSTRAINT FK_Account_Digital_Holding FOREIGN KEY (Account_ID) REFERENCES Digital_Asset_Account(Account_ID)
+);
+
+
 
 -- #endregion 14: Digital_Asset_Holding
 
