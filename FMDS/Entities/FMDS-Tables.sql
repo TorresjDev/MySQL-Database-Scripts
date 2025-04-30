@@ -139,7 +139,7 @@ CREATE TABLE Investment_Account (
     Total_User_Contribution DECIMAL(12, 2) NOT NULL,
     Total_Holdings_Amount DECIMAL(12, 2) NOT NULL,
     CONSTRAINT PK_Investment_Account PRIMARY KEY (Account_ID),
-    CONSTRAINT FK_Financial_Account_Investment FOREIGN KEY (Account_ID) REFERENCES Financial_Account(Account_ID)
+    CONSTRAINT FK_Financial_Account_Investment FOREIGN KEY (Account_ID) REFERENCES Financial_Account(Account_ID) 
 );
 
 -- ? Investment_Holding – Entity
