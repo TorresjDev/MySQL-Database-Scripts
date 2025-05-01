@@ -1,6 +1,9 @@
 -- ---------------------------------------------------------
 -- ---------------------------------------------------------
 -- ? CREDIT_REPORT – Strong Entity
+-- ---------------------------------------------------------
+-- -- * CREDIT_REPORT - Supertype
+-- ---------------------------------------------------------
 CREATE TABLE Credit_Report (
       Credit_Report_ID INT NOT NULL AUTO_INCREMENT,
       User_ID INT NOT NULL,

@@ -3,7 +3,6 @@
 -- ? USERS
 -- ---------------------------------------------------------
 -- -- * User - Supertype
--- ---------------------------------------------------------
 CREATE TABLE User (
     User_ID INT NOT NULL AUTO_INCREMENT,
     Full_Name VARCHAR(100) NOT NULL,
@@ -24,9 +23,7 @@ CREATE TABLE User (
     CONSTRAINT PK_User PRIMARY KEY (User_ID)
 ) Comment="Personal User Entity";
 -- -------------------------------------------------------------
--- -------------------------------------------------------------
 -- -- * Business_User - Subtype of User
--- -------------------------------------------------------------
 CREATE TABLE Business_User (
     Business_ID INT NOT NULL AUTO_INCREMENT,
     User_ID INT NOT NULL,
@@ -45,7 +42,6 @@ CREATE TABLE Business_User (
 -- ? Insert Statements
 -- -------------------------------------------------------------
 -- -- * User Insert Statement w/no SSN && no Business
--- -------------------------------------------------------------
 INSERT INTO User (Full_Name, Date_Of_Birth, Email, Phone_Number, Address_Line_1, Address_Line_2, Street, City, State, Zip_Code, Country)
 VALUES
 ('Alice Johnson', '1995-02-20', 'alice.johnson@gmail.com', '555-123-4567', '123', NULL, 'Main St', 'New York', 'NY', '10001', 'USA'),
@@ -54,28 +50,24 @@ VALUES
 -- ('Eva Garcia', '1988-12-05', 'eva.garcia@outlook.com', '555-111-2222', '321', NULL, 'Oak St', 'Houston', 'TX', '77001', 'USA');
 -- -------------------------------------------------------------
 -- -- * User Insert Statement w/SSN && no Business
--- -------------------------------------------------------------
 INSERT INTO User (Full_Name, Date_Of_Birth, SSN, Email, Phone_Number, Address_Line_1, Address_Line_2, Street, City, State, Zip_Code, Country)
 VALUES
 ('Frank Miller', '1990-09-30', '123-45-6789', 'frank.miller@gmail.com', '555-777-8888', '654', NULL, 'Pine St', 'Seattle', 'WA', '98101', 'USA'),
 ('Henry Thompson', '1988-04-20', '555-12-3456', 'henry.thompson@outlook.com', '555-222-2222', '567', NULL, 'Spruce St', 'Boston', 'MA', '02101', 'USA');
 -- -------------------------------------------------------------
 -- -- * User Insert Statement w/Business && no SSN
--- -------------------------------------------------------------
 INSERT INTO User (Full_Name, Date_Of_Birth, Email, Phone_Number, Address_Line_1, Address_Line_2, Street, City, State, Zip_Code, Country, Has_Business)
 VALUES
 ('Jack Lee', '1987-06-25', 'jack.lee@gmail.com', '555-666-6666', '234', 'suite 100', 'Fir St', 'Denver', 'CO', '80201', 'USA', TRUE),
 ('Kate Walker', '1991-10-05', 'kate.walker@outlook.com', '555-888-8888', '678', NULL, 'Willow St', 'Phoenix', 'AZ', '85001', 'USA', TRUE);
 -- -------------------------------------------------------------
 -- -- * User Insert Statement w/Business && w/SSN
--- -------------------------------------------------------------
 INSERT INTO User (Full_Name, Date_Of_Birth, SSN, Email, Phone_Number, Address_Line_1, Address_Line_2, Street, City, State, Zip_Code, Country, Has_Business)
 VALUES
 ('Liam Harris', '1985-05-15', '333-22-1111', 'liam.harris@gmail.com', '555-999-9999', '432', 'suite 500', 'Birch St', 'San Diego', 'CA', '92101', 'USA', TRUE),
 ('Mia Young', '1994-01-30', '222-11-3333', 'mia.young@outlook.com', '555-777-7777', '876', NULL, 'Maple St', 'Dallas', 'TX', '75201', 'USA', TRUE);
 -- -------------------------------------------------------------
 -- -- * Business User Insert Statement if User_ID has Business set to TRUE
--- -------------------------------------------------------------
 INSERT INTO Business_User (User_ID, EIN, Business_Name, Start_Of_Business, Business_Phone, Business_Email)
 SELECT u.User_ID, bu.EIN, bu.Business_Name, bu.Start_Of_Business, bu.Business_Phone, bu.Business_Email
 FROM (
@@ -96,26 +88,42 @@ SELECT * FROM User;
 SELECT * FROM User WHERE Has_Business = TRUE;
 SELECT * FROM User WHERE SSN IS NOT NULL;
 SELECT * FROM Business_User;
--- -- ---------------------------------------------------------
--- -- * Select All User Data Only By User_ID Ascending
--- -------------------------------------------------------------
+-- ------------------------------------------------------------
+-- -- * Select All Users By User_ID Ascending
 SELECT u.User_ID, u.Full_Name, u.Date_Of_Birth, u.SSN, u.Email, u.Phone_Number,
-    CONCAT_WS(' ', u.Address_Line_1, u.Address_Line_2, u.Street, u.City, u.State, u.Zip_Code, u.Country) AS Full_Address    
+    CONCAT_WS(' ', u.Address_Line_1, u.Address_Line_2, u.Street, u.City, u.State, u.Zip_Code, u.Country) AS Full_Address
 FROM User u ORDER BY u.User_ID ASC;
--- -- ---------------------------------------------------------
+-- ------------------------------------------------------------
+-- -- * Select Users with no SSN & no Business By User_ID Ascending
+SELECT u.User_ID, u.Full_Name, u.Date_Of_Birth, u.SSN, u.Email, u.Phone_Number,
+   CONCAT_WS(' ', u.Address_Line_1, u.Address_Line_2, u.Street, u.City, u.State, u.Zip_Code, u.Country) AS Full_Address
+FROM User u WHERE u.SSN IS NULL AND u.Has_Business = FALSE ORDER BY u.User_ID ASC;
+-- ------------------------------------------------------------
+-- -- * Select Users with SSN & no Business By User_ID Ascending
+SELECT u.User_ID, u.Full_Name, u.Date_Of_Birth, u.SSN, u.Email, u.Phone_Number,
+   CONCAT_WS(' ', u.Address_Line_1, u.Address_Line_2, u.Street, u.City, u.State, u.Zip_Code, u.Country) AS Full_Address
+FROM User u WHERE u.SSN IS NOT NULL AND u.Has_Business = FALSE ORDER BY u.User_ID ASC;
+-- ------------------------------------------------------------
+-- -- * Select Users with business & no SSN By User_ID Ascending
+SELECT u.User_ID, u.Full_Name, u.Date_Of_Birth, u.Email, u.Phone_Number,
+   CONCAT_WS(' ', u.Address_Line_1, u.Address_Line_2, u.Street, u.City, u.State, u.Zip_Code, u.Country) AS Full_Address, u.SSN
+FROM User u WHERE u.SSN IS NULL AND u.Has_Business = TRUE ORDER BY u.User_ID ASC;
+-- ------------------------------------------------------------
+-- -- * Select Users with business & SSN By User_ID Ascending
+SELECT u.User_ID, u.Full_Name, u.Date_Of_Birth, u.SSN, u.Email, u.Phone_Number,
+   CONCAT_WS(' ', u.Address_Line_1, u.Address_Line_2, u.Street, u.City, u.State, u.Zip_Code, u.Country) AS Full_Address
+FROM User u WHERE u.SSN IS NOT NULL AND u.Has_Business = TRUE ORDER BY u.User_ID ASC;
+-- ------------------------------------------------------------
 -- -- * Select All User Data with SSN ONLY By User_ID Ascending
--- -------------------------------------------------------------
 SELECT u.User_ID, u.Full_Name, u.Date_Of_Birth, u.SSN, u.Email, u.Phone_Number,
    CONCAT_WS(' ', u.Address_Line_1, u.Address_Line_2, u.Street, u.City, u.State, u.Zip_Code, u.Country) AS Full_Address
 FROM User u WHERE u.SSN IS NOT NULL ORDER BY u.User_ID ASC;
--- -- ---------------------------------------------------------
+-- ------------------------------------------------------------
 -- -- * Select All User Data with Business Data
--- -------------------------------------------------------------
 SELECT u.User_ID, u.Full_Name, u.Date_Of_Birth,  u.Email, u.Phone_Number, CONCAT_WS(' ', u.Address_Line_1, u.Address_Line_2, u.Street, u.City, u.State, u.Zip_Code, u.Country) AS Full_Address,
        bu.Business_ID, bu.EIN, bu.Business_Name, bu.Start_Of_Business, bu.Business_Phone, bu.Business_Email
 FROM User u LEFT JOIN Business_User bu ON u.User_ID = bu.User_ID WHERE u.Has_Business = TRUE ORDER BY u.User_ID DESC;
--- -- ---------------------------------------------------------
+-- ------------------------------------------------------------
 -- -- * Select All User Data with No Business Data
--- -------------------------------------------------------------
 SELECT u.User_ID, u.Full_Name, u.Date_Of_Birth,  u.Email, u.Phone_Number, CONCAT_WS(' ', u.Address_Line_1, u.Address_Line_2, u.Street, u.City, u.State, u.Zip_Code, u.Country) AS Full_Address
 FROM User u LEFT JOIN Business_User bu ON u.User_ID = bu.User_ID WHERE u.Has_Business = FALSE ORDER BY u.User_ID DESC;
