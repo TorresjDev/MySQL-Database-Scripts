@@ -3,7 +3,6 @@
 -- ? Investments
 -- ---------------------------------------------------------
 -- -- * Investment_Account – Subtype of Financial_Account
--- ---------------------------------------------------------
 CREATE TABLE Investment_Account (
     Account_ID INT NOT NULL AUTO_INCREMENT,
     Buying_Power DECIMAL(12, 2) NOT NULL,
@@ -19,7 +18,6 @@ CREATE TABLE Investment_Account (
 );
 -- ---------------------------------------------------------
 -- -- * Investment_Holding - Strong Entity
--- ---------------------------------------------------------
 CREATE TABLE Investment_Holding (
     Holdings_ID INT NOT NULL AUTO_INCREMENT,
     Account_ID INT NOT NULL,
@@ -42,7 +40,6 @@ CREATE TABLE Investment_Holding (
 );
 -- ---------------------------------------------------------
 -- -- * Investment_Asset - (Associative) Weak Entity
--- ---------------------------------------------------------
 CREATE TABLE Investment_Asset (
     Action_ID INT NOT NULL AUTO_INCREMENT,
     Holdings_ID INT NOT NULL,
@@ -53,7 +50,7 @@ CREATE TABLE Investment_Asset (
     Dividend_Amount DECIMAL(12, 2),
     Reinvestment_Flag BOOLEAN,       
     Fee_Type VARCHAR(30),              
-    Broker_Fee DECIMAL(10, 2),
+    Fee_Amount DECIMAL(10, 2),
     Inv_Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     Optional_Note TEXT,
     Created_At TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -67,42 +64,37 @@ CREATE TABLE Investment_Asset (
 -- ! -----------------------------------------------------------
 -- ? Insert Statements
 -- -------------------------------------------------------------
--- -- * Financial > Investment Account Insert Statement
-INSERT INTO Financial_Account (User_ID, Institution_Name, Account_Type, Account_Name, Account_Number, Account_Balance, Date_Account_Opened)
-VALUES
-(1, 'Robinhood', 'Investment', 'Robinhood Account', '369258147', 5000.00, '2023-05-25'),
-(2, 'Robinhood', 'Investment', 'Robinhood Gold Account', '321654987', 4000.00, '2023-09-15'),
-(3, 'Coinbase', 'Investment', 'Coinbase Pro Account', '654789321', 9000.00, '2023-10-01'),
-(4, 'Wells Fargo', 'Investment', 'Wells Fargo Investment Account', '753951468', 15000.00, '2023-07-15'),
-(5, 'Chase', 'Investment', 'Chase Investment Account', '159753258', 20000.00, '2023-08-01');
-INSERT INTO Investment_Account (Account_ID, Buying_Power, Cash_Balance, Total_User_Contribution, Total_Investment_Value, Total_Dividends_Earned, Total_Interest_Earned)
-VALUES
-(1, 5000.00, 2000.00, 3000.00, 7000.00, 100.00, 50.00),
-(2, 4000.00, 1500.00, 2500.00, 6000.00, 80.00, 40.00),
-(3, 9000.00, 3000.00, 6000.00, 12000.00, 200.00, 100.00),
-(4, 15000.00, 5000.00, 10000.00, 20000.00, 300.00, 150.00),
-(5, 20000.00, 7000.00, 13000.00, 25000.00, 400.00, 200.00);
--- -------------------------------------------------------------
+-- -- * Financial > Investment Account Insert Statement --> financial_accounts.sql
 SELECT * FROM Investment_Account;
 -- -------------------------------------------------------------
 -- -- * Investment > Investment Holding Insert Statement
 INSERT INTO Investment_Holding (Account_ID, Investment_Type, Investment_Symbol, Investment_Name, Total_Quantity, Average_Price_Per_Share, Current_Price, Holdings_Value, Unrealized_Gain_Or_Loss, Realized_Gain_Or_Loss, Date_Opened, Holding_Status)
 VALUES
-(1, 'Stock', 'AAPL', 'Apple Inc.', 50, 150.00, 160.00, 8000.00, 500.00, 0.00, '2023-05-25', 'Active'),
-(2, 'Stock', 'TSLA', 'Tesla Inc.', 30, 700.00, 720.00, 21600.00, 600.00, 0.00, '2023-09-15', 'Active'),
-(3, 'ETF', 'SPY', 'SPDR S&P 500 ETF Trust', 100, 400.00, 410.00, 41000.00, 1000.00, 0.00, '2023-10-01', 'Active'),
-(4, 'ETF', 'VOO', 'Vanguard S&P 500 ETF', 20, 250.00, 260.00, 5200.00, 200.00, 0.00, '2023-07-15', 'Active'),
-(5, 'Mutual Fund', 'VFIAX', 'Vanguard 500 Index Fund', 10, 3000.00, 3100.00, 31000.00, 1000.00, 0.00, '2023-08-01', 'Active');
--- -------------------------------------------------------------
+(3, 'Stock', 'AAPL', 'Apple Inc.', 50, 150.00, 160.00, 8000.00, 500.00, 0.00, '2023-05-25', 'Active'),
+(3, 'Stock', 'TSLA', 'Tesla Inc.', 30, 700.00, 720.00, 21600.00, 600.00, 0.00, '2023-09-15', 'Active'),
+(9, 'ETF', 'SPY', 'SPDR S&P 500 ETF Trust', 100, 400.00, 410.00, 41000.00, 1000.00, 0.00, '2023-10-01', 'Active'),
+(12, 'ETF', 'VOO', 'Vanguard S&P 500 ETF', 20, 250.00, 260.00, 5200.00, 200.00, 0.00, '2023-07-15', 'Active'),
+(12, 'Mutual Fund', 'VFIAX', 'Vanguard 500 Index Fund', 10, 3000.00, 3100.00, 31000.00, 1000.00, 0.00, '2023-08-01', 'Active');
 SELECT * FROM Investment_Holding;
--- -- * Investment > Investment Asset Insert Statement
-INSERT INTO Investment_Asset (Holdings_ID, Account_ID, Action_Type, Quantity, Price_Per_Share, Dividend_Amount, Reinvestment_Flag, Fee_Type, Broker_Fee, Inv_Timestamp, Optional_Note)
-VALUES    
-(6, 1, 'Buy', 10, 150.00, NULL, FALSE, 'Brokerage Fee', 5.00, '2023-05-26 10:00:00', 'Bought additional shares of AAPL.'),
-(7, 2, 'Sell', 5, 720.00, NULL, FALSE, 'Brokerage Fee', 10.00, '2023-09-16 11:00:00', 'Sold some shares of TSLA.'),
-(8, 3, 'Dividend', NULL, NULL, 50.00, TRUE, NULL, NULL, '2023-10-02 12:00:00', 'Received dividend payment from SPY.'),
-(9, 4, 'Buy', 2, 260.00, NULL, FALSE, 'Brokerage Fee', 5.00, '2023-07-16 13:00:00', 'Bought additional shares of VOO.'),
-(10, 5, 'Sell', 1, 3100.00, NULL, FALSE, 'Brokerage Fee', 15.00, '2023-08-02 14:00:00', 'Sold some shares of VFIAX.');
 -- -------------------------------------------------------------
+-- -- * Investment > Investment Asset Insert Statement
+INSERT INTO Investment_Asset (Holdings_ID, Account_ID, Action_Type, Quantity, Price_Per_Share, Dividend_Amount, Reinvestment_Flag, Fee_Type, Fee_Amount, Inv_Timestamp, Optional_Note)
+VALUES
+(1, 3, 'Purchase', 10, 150.00, 0.00, FALSE, 'Brokerage Fee', 5.00, '2023-05-25 10:00:00', 'Initial purchase of Apple shares'),
+(2, 3, 'Purchase', 5, 700.00, 0.00, FALSE, 'Brokerage Fee', 10.00, '2023-09-15 14:30:00', 'Initial purchase of Tesla shares'),
+(3, 9, 'Dividend', 0, 0.00, 50.00, TRUE, 'Reinvestment Fee', 0.00, '2023-10-01 12:00:00', 'Dividend reinvestment for SPY ETF'),
+(4, 12, 'Purchase', 2, 250.00, 0.00, FALSE, 'Brokerage Fee', 5.00, '2023-07-15 11:30:00', 'Initial purchase of VOO ETF'),
+(5, 12, 'Purchase', 1, 3000.00, 0.00, FALSE, 'Brokerage Fee', 20.00, '2023-08-01 09:45:00', 'Initial purchase of VFIAX Mutual Fund');
 SELECT * FROM Investment_Asset;
--- -------------------------------------------------
+-- -------------------------------------------------------------
+-- ! -----------------------------------------------------------
+-- ? Select Statements
+-- -------------------------------------------------------------
+-- -- * Select All Investments
+SELECT * FROM Investment_Account;
+SELECT * FROM Investment_Holding;
+SELECT * FROM Investment_Asset;
+-- -- -------------------------------------------------------------
+-- -- * Select All Investment Assets in Investment Accounts > Financial Account by User
+
+-- Drop all tables in the database
