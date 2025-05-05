@@ -201,7 +201,50 @@ ORDER BY u.Full_Name ASC, fa.Institution_Name ASC;
 
 
 
+-- * Insert business financial accounts
+INSERT INTO Financial_Account (Account_ID, User_ID, Institution_Name, Account_Type, Account_Name, Account_Number, Account_Balance, Date_Account_Opened)
+VALUES 
+(14, 3, 'Wells Fargo', 'Bank', 'Business Checking', '133126623393', 5000.00, '2023-01-01'),
+(15, 2, 'Chase Bank', 'Bank', 'Business Savings', '456457856966', 10000.00, '2022-11-10'),
+(16, 3, 'Robinhood', 'Investment', 'Business Brokerage', 'RH76989900', 20000.00, '2023-03-05'),
+(17, 1, 'BlockFi', 'Digital Asset', 'Business Crypto Wallet', 'BFCrypto173', 15000.00, '2023-02-15'),
+(18, 1, 'Navy Federal', 'Credit', 'Business Visa Signature', '998277665544', 8000.00, '2023-05-20'),
+(19, 2, 'SoFi', 'Loan', 'Business Start Up Loan', 'SL12345679', 25000.00, '2021-09-01');
+SELECT * FROM Financial_Account;
 
+-- -------------------------------------------------------------
 
+-- -- * Business Bank Account Insert Statement
+INSERT INTO Bank_Account (Account_ID, Routing_Number, APY)
+VALUES
+(14, '173456789', 0.05),
+(15, '827654321', 0.03);  
+Select * from Bank_Account;
+-- -------------------------------------------------------------
+-- -- * Business Loan Account Insert Statement
+INSERT INTO Loan_Account (Account_ID, Loan_Amount, Loan_Term, Interest_Rate, Exp_Monthly_Payment, Start_Date, Exp_End_Date)
+VALUES
+(1, 50000.00, 120, 5.25, 550.00, '2023-01-01', '2033-01-01'),
+(2, 100000.00, 60, 4.75, 2000.00, '2022-10-01', '2027-10-01');
+
+-- Example: Insert 1 business INvestment account data
+INSERT INTO Investment_Account (Account_ID, Buying_Power, Cash_Balance, Total_User_Contribution, Total_Investment_Value, Total_Dividends_Earned, Total_Interest_Earned)
+VALUES
+(16, 10000.00, 5000.00, 8000.00, 12000.00, 200.00, 100.00);
+SELECT * FROM Investment_Account;
+
+-- -------------------------------------------------------------
+-- -- * Business 1 Digital Asset Account Insert Statement
+
+INSERT INTO Digital_Asset_Account (Account_ID, Digital_Account_Type, Wallet_Address, Total_User_Contribution, Total_Digital_Assets_Value, Total_Dividends_Earned, Total_Interest_Earned)
+VALUES 
+(17, 'Business Crypto Wallet', '0xA1B2C3D4E5F6G7H8I9J0', 15000.00, 20000.00, 300.00, 50.00);
+SELECT * FROM Digital_Asset_Account;
+-- -------------------------------------------------------------
+-- -- * Business 1 Credit Account Insert Statement
+INSERT INTO Credit_Account (Account_ID, Credit_Card_Number, Credit_Limit, Interest_Rate, Billing_Cycle_Due_Date, Card_Expiration_Date)  
+VALUES
+(18, '4111111111111111', 10000.00, 18.99, '2024-05-10', '2027-05');
+SELECT * FROM Credit_Account;
 
 
