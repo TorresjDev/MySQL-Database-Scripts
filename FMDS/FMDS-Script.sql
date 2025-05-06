@@ -690,9 +690,30 @@ SELECT
     b.Business_Name,
     b.EIN,
     b.Start_Of_Business
+
 FROM 
     User u
 JOIN 
     Business_User b ON u.User_ID = b.User_ID
 WHERE 
     u.Has_Business = TRUE;
+
+
+-- ? Select All Tables in the Database
+SELECT * FROM User;
+SELECT * FROM Business_User;  
+SELECT * FROM Financial_Account ORDER BY Account_ID DESC;
+SELECT * FROM Bank_Account ORDER BY Account_ID DESC;
+SELECT * FROM Loan_Account ORDER BY Account_ID DESC;
+SELECT * FROM Credit_Account ORDER BY Account_ID DESC;
+SELECT * FROM Investment_Account ORDER BY Account_ID DESC;
+SELECT * FROM Digital_Asset_Account ORDER BY Account_ID DESC;
+SELECT * FROM Investment_Holding;
+SELECT * FROM Investment_Asset;
+SELECT * FROM Digital_Asset_Holding;
+SELECT * FROM Digital_Asset;
+SELECT * FROM Transaction ORDER BY Transaction_ID DESC;
+SELECT * FROM Tax_Report;
+SELECT * FROM Taxable_Transaction;
+
+

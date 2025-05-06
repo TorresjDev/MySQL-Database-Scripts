@@ -46,7 +46,31 @@ VALUES
 (12, 'Purchase', 1200.00, '2023-10-22 10:10:00', 'TDA Account', 'Stock', 'Bought shares of QQQ'),
 (12, 'Dividend', 20.00, '2023-10-23 12:00:00', 'Reinvest', 'Dividend', 'QQQ dividend payout'),
 (13, 'Buy', 500.00, '2023-10-24 14:15:00', 'PayPal Crypto', 'Crypto', 'Purchased LTC'),
-(13, 'Sell', 300.00, '2023-10-25 16:30:00', 'PayPal Wallet', 'Crypto', 'Sold partial LTC holdings');
+(13, 'Sell', 300.00, '2023-10-25 16:30:00', 'PayPal Wallet', 'Crypto', 'Sold partial LTC holdings'),
+(1, 'Payment', 3452.16, '2023-11-01 08:00:00', 'Direct Deposit', 'Credit Payment', 'Payment for credit payment'),
+(1, 'Charge', 4236.17, '2023-11-01 10:00:00', 'Direct Deposit', 'Stock', 'Charge for stock'),
+(18, 'Dividend', 4413.56, '2023-11-01 21:00:00', 'Bank Transfer', 'Loan Payment', 'Dividend for loan payment'),
+(18, 'Payment', 3604.97, '2023-11-02 07:00:00', 'Bank Transfer', 'Stock', 'Payment for stock'),
+(17, 'Buy', 1782.92, '2023-11-02 18:00:00', 'Card Swipe', 'Credit Payment', 'Buy for credit payment'),
+(17, 'Buy', 4998.18, '2023-11-03 01:00:00', 'Bank Transfer', 'Loan Payment', 'Buy for loan payment'),
+(6, 'Buy', 1196.42, '2023-11-03 11:00:00', 'Online Banking', 'Stock', 'Buy for stock'),
+(6, 'Payment', 4649.11, '2023-11-03 20:00:00', 'Bank Transfer', 'Crypto', 'Payment for crypto'),
+(14, 'Withdrawal', 708.33, '2023-11-04 01:00:00', 'Bank Transfer', 'Crypto', 'Withdrawal for crypto'),
+(14, 'Payment', 2610.02, '2023-11-04 13:00:00', 'Card Swipe', 'Crypto', 'Payment for crypto'),
+(14, 'Charge', 1893.50, '2023-11-04 18:00:00', 'Bank Transfer', 'Dividend', 'Charge for dividend'),
+(3, 'Interest', 4310.53, '2023-11-05 00:00:00', 'Bank Transfer', 'Loan Payment', 'Interest for loan payment'),
+(3, 'Dividend', 860.17, '2023-11-05 02:00:00', 'Online Banking', 'Dividend', 'Dividend for dividend'),
+(16, 'Interest', 3602.82, '2023-11-05 07:00:00', 'Card Swipe', 'Dividend', 'Interest for dividend'),
+(16, 'Buy', 2877.17, '2023-11-05 17:00:00', 'Direct Deposit', 'Stock', 'Buy for stock'),
+(16, 'Charge', 1931.89, '2023-11-06 02:00:00', 'Card Swipe', 'Dividend', 'Charge for dividend'),
+(11, 'Deposit', 4562.69, '2023-11-06 13:00:00', 'Bank Transfer', 'Loan Payment', 'Deposit for loan payment'),
+(11, 'Deposit', 1440.27, '2023-11-07 01:00:00', 'Crypto Wallet', 'Loan Payment', 'Deposit for loan payment'),
+(4, 'Interest', 3901.28, '2023-11-07 13:00:00', 'Online Banking', 'Interest', 'Interest for interest'),
+(4, 'Buy', 4082.65, '2023-11-07 21:00:00', 'Bank Transfer', 'Stock', 'Buy for stock'),
+(9, 'Dividend', 2043.73, '2023-11-08 09:00:00', 'Card Swipe', 'Dividend', 'Dividend for dividend'),
+(9, 'Sell', 3175.81, '2023-11-08 19:00:00', 'Bank Transfer', 'Stock', 'Sell for stock'),
+(12, 'Charge', 2915.35, '2023-11-09 08:00:00', 'Card Swipe', 'Crypto', 'Charge for crypto'),
+(12, 'Payment', 1660.24, '2023-11-09 15:00:00', 'Direct Deposit', 'Loan Payment', 'Payment for loan payment');
 SELECT * FROM Transaction;
 -- ---------------------------------------------------------
 -- -- ? SELECT Statements
