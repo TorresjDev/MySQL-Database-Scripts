@@ -1,0 +1,101 @@
+-- ===============================
+-- * User Insert Statement
+-- ===============================
+INSERT INTO
+    User (
+        User_ID,
+        Full_Name,
+        Date_Of_Birth,
+        SSN,
+        Email,
+        Phone_Number,
+        Address_Line_1,
+        Address_Line_2,
+        Street,
+        City,
+        State,
+        Zip_Code,
+        Country,
+        Has_Business
+    )
+VALUES (
+        1,
+        'Alice Johnson',
+        '1990-03-15',
+        '123-45-6789',
+        'alice.johnson@email.com',
+        '123-456-7890',
+        '123',
+        NULL,
+        'Main St',
+        'New York',
+        'NY',
+        '10001',
+        'USA',
+        TRUE
+    ),
+    (
+        2,
+        'Brian Lee',
+        '1985-07-20',
+        NULL,
+        'brian.lee@email.com',
+        '321-654-9870',
+        '456',
+        NULL,
+        'Elm St',
+        'Dallas',
+        'TX',
+        '75001',
+        'USA',
+        FALSE
+    ),
+    (
+        3,
+        'Carlos Rivera',
+        '1988-12-05',
+        '987-65-4321',
+        'carlos.rivera@email.com',
+        '789-654-1230',
+        '789',
+        NULL,
+        'Oak St',
+        'Houston',
+        'TX',
+        '77002',
+        'USA',
+        TRUE
+    ),
+    (
+        4,
+        'Diana Blake',
+        '1995-04-22',
+        NULL,
+        'diana.blake@email.com',
+        '147-258-3690',
+        '321',
+        NULL,
+        'Pine St',
+        'San Antonio',
+        'TX',
+        '78205',
+        'USA',
+        TRUE
+    ),
+    (
+        5,
+        'Ethan Hunt',
+        '1992-11-11',
+        '135-45-6279',
+        'ethan.hunt@email.com',
+        '123-456-7890',
+        '423',
+        NULL,
+        'Maple St',
+        'Austin',
+        'TX',
+        '73301',
+        'USA',
+        FALSE
+    );
+-- ===============================
