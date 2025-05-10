@@ -317,3 +317,5 @@ JOIN Taxable_Transaction tt ON tr.Tax_Report_ID = tt.Tax_Report_ID
 WHERE u.SSN IS NOT NULL
 ORDER BY 
     u.Full_Name ASC, tr.Tax_Year DESC, tt.Identified_Timestamp DESC;
+
+
