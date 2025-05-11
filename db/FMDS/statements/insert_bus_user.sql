@@ -1,5 +1,5 @@
 -- ===============================
--- * Business User Insert Statement
+-- * Business User - Insert Statement
 -- ===============================
 INSERT INTO
     Business_User (

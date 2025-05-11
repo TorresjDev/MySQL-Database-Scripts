@@ -1,5 +1,5 @@
 -- ===============================
--- *  User Super Type Entity
+-- *  User - Super Type Entity
 -- ===============================
 CREATE TABLE User (
     User_ID INT NOT NULL AUTO_INCREMENT,

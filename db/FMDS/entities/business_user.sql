@@ -1,5 +1,5 @@
 -- ===============================
--- * Business User Sub-Type Entity
+-- * Business User - Sub-Type Entity of User
 -- ===============================
 CREATE TABLE Business_User (
     Business_ID INT NOT NULL AUTO_INCREMENT,

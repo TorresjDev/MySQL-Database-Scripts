@@ -1,5 +1,5 @@
 -- ===============================
--- * User Insert Statement
+-- * User - Insert Statement
 -- ===============================
 INSERT INTO
     User (

@@ -1,5 +1,5 @@
 -- ===============================
--- * Credit Report Super Type Entity
+-- * Credit Report - Super Type Entity
 -- ===============================
 CREATE TABLE Credit_Report (
     Credit_Report_ID INT NOT NULL AUTO_INCREMENT,

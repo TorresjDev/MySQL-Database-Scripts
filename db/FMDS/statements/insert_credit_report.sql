@@ -1,5 +1,5 @@
 -- ===============================
--- * Insert Credit Report Data
+-- * Credit Report - Insert Statement
 -- ===============================
 INSERT INTO
     Credit_Report (
